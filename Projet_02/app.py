@@ -14,6 +14,8 @@ Pour lancer le dashboard :
 dossier data/.)
 """
 
+import os
+
 import pandas as pd
 import streamlit as st
 from sklearn.ensemble import RandomForestClassifier
@@ -35,7 +37,9 @@ FEATURES = [
 @st.cache_resource(show_spinner="Entraînement du modèle sur 30 ans de matchs...")
 def train():
     """Reproduit le pipeline du notebook et renvoie tout ce qu'il faut pour prédire."""
-    df = load_results("data/results.csv")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_path = os.path.join(base_dir, "data", "results.csv")
+    df = load_results(data_path)
     df = df[(df["date"] >= "1994-01-01") & (df["date"] <= "2026-06-30")].reset_index(drop=True)
 
     df = add_recent_form(df, window=10, min_matches=5)
